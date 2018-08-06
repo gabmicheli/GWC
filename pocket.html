@@ -19,7 +19,7 @@ var myGamePiece;
 var myObstacles = [];
 var myScore;
 function startGame() {
-    myGamePiece = new component(30, 30, "#970A2B", 10, 320);
+    myGamePiece = new component(30, 30, "crimson", 10, 320);
     myScore = new component("30px", "Consolas", "black", 375, 40, "text");
     myGameArea.start();
 }
@@ -32,6 +32,10 @@ var myGameArea = {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('touchmove', function (e){
+          myGameArea.x=e.touches[0].screenX;
+          myGameArea.y=e.touches[0].screenY;
+        })
         },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -92,6 +96,10 @@ function updateGameArea() {
         }
     }
     myGameArea.clear();
+    if (myGameArea.x && myGameArea.y){
+      myGameArea.x=myGameArea.x;
+      myGameArea.y=myGameArea.y;
+    }
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(150)) {
         x = myGameArea.canvas.width;
@@ -137,7 +145,7 @@ function clearmove() {
 </script>
 <style>
   body{
-    background-image: url("bluepocket.png");
+    background-image: url("lightpocket.png");
   }
 </style>
 <div style="text-align:center;width:875px;">
@@ -147,6 +155,12 @@ function clearmove() {
   <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button><br><br>
   <button onmousedown = "startGame()">INCREASE DIFFICULTY</button><br><br>
 </div>
-<p>The score will count one point for each frame you manage to "stay alive".</p>
+<p><strong>The score will count one point for each frame you manage to "stay alive".</strong></p>
+<p><strong>The game is touch screen so you can use the buttons or your finger to move the block.</strong></p>
+<p><strong>Refresh the page to restart the game.</strong></p>
+<style>
+  p{
+    color: white; font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif ;font-size:20px;
+  }
 </body>
 </html>
