@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
 canvas {
-    border:5px solid #d3d3d3;
-    background-position: center;
-    text-align:center;
-    margin-left:auto;
-    margin-right:auto
-}
-html, body, {
-    position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+    border:1px solid #d3d3d3;
+    background-image:url("Capture.PNG");
 }
 </style>
 </head>
@@ -24,24 +15,25 @@ var myGamePiece;
 var myObstacles = [];
 var myScore;
 function startGame() {
-    myGamePiece = new component(30, 30, "crimson", 10, 220);
-    myScore = new component("30px", "Consolas", "black", 10, 40, "text");
+    myGamePiece = new component(30, 30, "red", 10, 120);
+    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
 }
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 1000;
-        this.canvas.height = 370;
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.canvas.style.cursor = "none";
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
-        window.addEventListener('touchmove', function (e){
-          myGameArea.x=e.touches[0].screenX;
-          myGameArea.y=e.touches[0].screenY;
+        window.addEventListener('mousemove', function (e) {
+            myGameArea.x =  e.pageX;
+            myGameArea.y =  e.pageY;
         })
-        },
+      },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
@@ -51,10 +43,6 @@ var myGameArea = {
 }
 function component(width, height, color, x, y, type) {
     this.type = type;
-    if (type == "image") {
-        this.image = new Image();
-        this.image.src = color;
-    }
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -101,10 +89,12 @@ function updateGameArea() {
         }
     }
     myGameArea.clear();
-    if (myGameArea.x && myGameArea.y){
-      myGameArea.x=myGameArea.x;
-      myGameArea.y=myGameArea.y;
+
+    if (myGameArea.x && myGameArea.y) {
+        myGamePiece.x = myGameArea.x;
+        myGamePiece.y = myGameArea.y;
     }
+
     myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(150)) {
         x = myGameArea.canvas.width;
@@ -114,8 +104,8 @@ function updateGameArea() {
         minGap = 50;
         maxGap = 200;
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
-        myObstacles.push(new component(10, height, "white", x, 0));
-        myObstacles.push(new component(10, x - height - gap, "white", x, height + gap));
+        myObstacles.push(new component(10, height, "green", x, 0));
+        myObstacles.push(new component(10, x - height - gap, "green", x, height + gap));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].speedX = -1;
@@ -137,33 +127,26 @@ function moveup() {
 function movedown() {
     myGamePiece.speedY = 1;
 }
+function moveleft() {
+    myGamePiece.speedX = -1;
+}
+function moveright() {
+    myGamePiece.speedX = 1;
+}
 function clearmove() {
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
 }
 </script>
-<style>
-  body{
-    background-image: url("https://78.media.tumblr.com/d07e9bb06a4871430db1d4b784625e5a/tumblr_pd1yg29wdM1xc13r4o1_500.png");
-  }
-</style>
-<div style="text-align:center;width:200px;">
+<div style="text-align:center;width:480px;">
   <button onmousedown="moveup()" onmouseup="clearmove()" ontouchstart="moveup()">UP</button><br><br>
-  <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button><br><br>
-  <button onmousedown = "startGame()">INCREASE DIFFICULTY</button><br><br>
+  <button onmousedown="moveleft()" onmouseup="clearmove()" ontouchstart="moveleft()">LEFT</button>
+  <button onmousedown="moveright()" onmouseup="clearmove()" ontouchstart="moveright()">RIGHT</button><br><br>
+  <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button>
 </div>
-<p><strong>The score will count one point for each frame you manage to "stay alive".</strong></p>
-<p><strong>The game is touch screen so you can use the buttons or your finger to move the block.</strong></p>
-<p><strong>Refresh the page to restart the game.</strong></p>
-<style>
-  p{
-    color: white; font-family: "Roboto Slab", "Helvetica Neue", Helvetica, Arial, sans-serif ;font-size:17px; text-align:center;
-  }
-  </style>
-  <button onclick= "myFunction()">Reload Page</button>
-<script>
-    function myFunction(){
-        location.reload();
-    }
+<div style="text-align:center;width:480px;">
+  <button onmousedown = "startGame()">Increase Difficulty</button><br><br>
+</div>
+<p>The score will count one point for each frame you manage to "stay alive".</p>
 </body>
 </html>
